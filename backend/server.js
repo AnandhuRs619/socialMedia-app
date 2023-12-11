@@ -3,7 +3,7 @@ import dotenv from "dotenv"
 import connectDB from "./db/connectDB.js";
 import cookieParser from "cookie-parser";
 import userRoutes from './routes/userRoutes.js'
-import cors from 'cors';
+// import cors from 'cors';
 
 
 
@@ -15,7 +15,7 @@ const app = express();
 // eslint-disable-next-line no-undef
 const PORT = process.env.PORT || 5000;
 
-app.use(cors());
+// app.use(cors());
 app.use(express.json()); // To parse json data the req.body
 app.use(express.urlencoded({extended:true})); // To parse from data in the req.body
 app.use(cookieParser());
