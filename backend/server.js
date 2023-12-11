@@ -12,7 +12,7 @@ dotenv.config();
 connectDB();
 const app = express();
 
-// eslint-disable-next-line no-undef
+
 const PORT = process.env.PORT || 5000;
 
 // app.use(cors());
