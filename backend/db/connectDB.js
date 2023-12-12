@@ -3,8 +3,8 @@ import mongoose from "mongoose";
 const connectDB = async () => {
 	try {
 		const conn = await mongoose.connect('mongodb://127.0.0.1:27017/social-media', {
-			useNewUrlParser: true,
-			useUnifiedTopology: true,
+			// useNewUrlParser: true,
+			// useUnifiedTopology: true,
 		});
 
 		console.log(`MongoDB Connected: ${conn.connection.host}`);

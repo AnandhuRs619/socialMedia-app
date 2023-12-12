@@ -50,6 +50,23 @@ const getPost = async(req,res)=>{
         }
 }
 
+const getFeedPosts = async(req, res) => {
+    try {
+        const userId =req.user._id;
+        const user = User.findById(userId);
+        if(!user){
+            return res.status(404).json({message:" User not found"})
+        }
+        const following = user.following;
+        const feedPost = await Post.find({postedBy:{$in:following}}).sort({createdAt:-1}) 
+        res.status(200).json({feedPost})
+        
+    } catch (error) {
+        res.status(500).json({message:error.message})
+        console.log(error)
+    }
+}
+
 const deletePost = async(req,res )=>{
     try{
       const post = await  Post.findById(req.params.id);
@@ -71,4 +88,70 @@ const deletePost = async(req,res )=>{
     }
 }
 
-export {createPost,getPost ,deletePost};
+const likeUnlikepost = async(req,res)=>{
+    try{
+        const {id:postId}= req.params;
+        const userId = req.user._id;
+
+       const post = await Post.findById(postId)
+
+       if(!post){
+        return res.status(404).json({message:"post not found"})
+       }
+       const userLikedPost = post.likes.includes(userId);
+       if(userLikedPost){
+            // ulike the post
+            await Post.updateOne({_id:postId},{$pull : {likes:userId}});
+            res.status(200).json({message:"post Unliked successfully "})
+       }else{
+            // like the post 
+            post.likes.push(userId);
+            await post.save();
+            res.status(200).json({message:"post liked successfully "})
+       }
+
+
+    }catch(error){
+        res.status(500).json({message:error.message})
+        console.log(error)
+    }
+}
+
+
+
+const replyToPost = async(req,res)=>{
+    try {
+        const {text} = req.body;
+        const postId = req.params.id;
+        const userId = req.user._id;
+        const userProfilePic = req.user.profilePic;
+        const username = req.user.username;
+        console.log(userProfilePic)
+
+        if(!text){
+            return res.status(404).json({message:"text field is required"});
+
+        }
+        const post = await Post.findById(postId);
+
+        if(!post){
+            return res(404).json({message:" post not found"});
+        }
+
+        const reply ={ post,userId ,text , userProfilePic, username};
+
+        post.replies.push(reply);
+        await post.save();
+        res.status(200).json({message:" your reply is added successfully ",reply});
+
+
+
+        
+    } catch (error) {
+        res.status(500).json({message:error.message})
+        console.log(error)
+    }
+}
+
+
+export {createPost,getPost ,deletePost,likeUnlikepost,replyToPost,getFeedPosts};
