@@ -8,7 +8,7 @@ const getUserProfile = async(req,res)=>{
 	console.log(req.params)
 	try{
 		const user = await User.findOne({username}).select("-password").select("-updatedAt");
-		if(!user) return res.status(400).json({message:"user not found"})
+		if(!user) return res.status(400).json({error:"user not found"})
 
 		res.status(200).json(user)
 	}catch(error){
@@ -65,7 +65,7 @@ const signupUser = async (req, res) => {
 		const {username, password } = req.body;
 		const user = await User.findOne({username});
 		const isPasswordCorrect = await bcrypt.compare(password,user?.password || "");
-		if(!user || !isPasswordCorrect ) return res.status(400).json({message:"Invalid Username or Password"});
+		if(!user || !isPasswordCorrect ) return res.status(400).json({error:"Invalid Username or Password"});
 		generateTokenAndSetCookie(user._id,res);
 
 		res.status(200).json({
@@ -76,7 +76,7 @@ const signupUser = async (req, res) => {
 		})
 
 	}catch(error){
-		res.status(500).json({message:error.message});
+		res.status(500).json({error:error.message});
 		console.log("Error in loginUser:",error.message);
 	}
  }
@@ -126,7 +126,7 @@ const updateUser = async(req,res)=>{
 	const userId = req.user._id
 	try{
 		let user = await User.findById(userId);
-		if(!user) return res.status(400).json({message: "User not found" });
+		if(!user) return res.status(400).json({error: "User not found" });
 
 		if(req.params.id !==  userId.toString()) return res.status(400).json({message:"you cannot update other's profiles"})
 		if(password){
