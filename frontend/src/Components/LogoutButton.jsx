@@ -10,19 +10,22 @@ export const LogoutButton = () => {
        try {
         
         // fetch
-        const res = fetch('/api/user/logout',{
+        const res = await fetch('/api/users/logout',{
             method:"POST",
             headers:{
                 "Content-type":"application/json",
             },
         })
+        const data = await (await res).json();
         if(DataTransfer.error){
-            showToast()
+            showToast("Error",data.error,"error");
+            return;
         }
+
         localStorage.removeItem("user-threads");
         setUser(null);
        } catch (error) {
-        console.log(error)
+        showToast("Error",error,"error")
        } 
     }
   return (

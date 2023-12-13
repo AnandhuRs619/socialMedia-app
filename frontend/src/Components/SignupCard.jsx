@@ -13,12 +13,14 @@ import {
 	Text,
 	useColorModeValue,
 	Link,
-    useToast,
+    
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { useSetRecoilState } from "recoil";
 import authScreenAtom from "../atoms/authAtom";
+import useShowToast from "../hooks/useShowToast";
+import userAtom from "../atoms/userAtom";
 
 export const SignupCard = () => {
     const [showPassword, setShowPassword] = useState(false);
@@ -29,8 +31,8 @@ export const SignupCard = () => {
         email:"",
         password:"",
     });
-    const tosat =useToast();
-
+    const showToast =useShowToast();
+    const setUser = useSetRecoilState(userAtom);
     const handleSignup = async()=>{
         try {
 
@@ -46,19 +48,14 @@ export const SignupCard = () => {
             const data = await res.json();
             console.log(data);
             if(data.error){
-                tosat({
-                    title:"Error",
-                    description: data.error,
-                    status:"error",
-                    duration:3000,
-                });
+               showToast("Error",data.error,"error")
                 return
 
             }
             localStorage.setItem("user-threads",JSON.stringify(data))
-            
+            setUser(data)
         } catch (error) {
-            console.log(error);
+            showToast("Error",error,"error")
         }
     }
 
