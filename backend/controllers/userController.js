@@ -157,9 +157,9 @@ const updateUser = async(req,res)=>{
 
 		 // password should be null in response
 		 
-		user.password = null;
+		// user.password = null;
 
-		 res.status(200).json({message:"Profile updated successfully",user})
+		 res.status(200).json( user)
 
 
 

@@ -90,7 +90,7 @@ export default function UpdateProfilePage() {
 					<FormControl>
 						<FormLabel>Full name</FormLabel>
 						<Input
-							placeholder={inputs.name}
+							placeholder=""
 							value={inputs.name}
 							onChange={(e) => setInputs({ ...inputs, name: e.target.value })}
 							_placeholder={{ color: "gray.500" }}
@@ -100,7 +100,7 @@ export default function UpdateProfilePage() {
 					<FormControl>
 						<FormLabel>User name</FormLabel>
 						<Input
-							placeholder={inputs.username}
+							placeholder="username"
 							value={inputs.username}
 							onChange={(e) => setInputs({ ...inputs, username: e.target.value })}
 							_placeholder={{ color: "gray.500" }}
@@ -110,7 +110,7 @@ export default function UpdateProfilePage() {
 					<FormControl>
 						<FormLabel>Email address</FormLabel>
 						<Input
-							placeholder={inputs.email}
+							placeholder="email"
 							value={inputs.email}
 							onChange={(e) => setInputs({ ...inputs, email: e.target.value })}
 							_placeholder={{ color: "gray.500" }}
@@ -121,7 +121,7 @@ export default function UpdateProfilePage() {
 					<FormControl>
 						<FormLabel>Bio</FormLabel>
 						<Input
-							placeholder={inputs.bio}
+							placeholder="Bio"
 							value={inputs.bio}
 							onChange={(e) => setInputs({ ...inputs, bio: e.target.value })}
 							_placeholder={{ color: "gray.500" }}
