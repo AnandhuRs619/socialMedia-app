@@ -63,10 +63,10 @@ export const UserPost = ({postImg,postTitle,likes,replies}) => {
                 </MenuButton>
                 <Portal>
                 <MenuList bg={"gray.dark"}>
-                  <MenuItem bg={"gray.dark"}fontWeight={'bold'} borderBottom={'1px solid gray'} >Unfollow</MenuItem>
-                  <MenuItem bg={"gray.dark"}fontWeight={'bold'}borderBottom={'1px solid gray'}>Mute</MenuItem>
-                  <MenuItem bg={"gray.dark"}fontWeight={'bold'}borderBottom={'1px solid gray'}>Hide</MenuItem>
-                  <MenuItem bg={"gray.dark"}fontWeight={'bold'} color={'red'} >Report</MenuItem>
+                  <MenuItem bg={"gray.dark"}fontWeight={'bold'} borderBottom={'1px solid gray'} >Pin to porfile</MenuItem>
+                  <MenuItem bg={"gray.dark"}fontWeight={'bold'}borderBottom={'1px solid gray'}>Archive</MenuItem>
+                  <MenuItem bg={"gray.dark"}fontWeight={'bold'}borderBottom={'1px solid gray'}>Hide like count </MenuItem>
+                  <MenuItem bg={"gray.dark"}fontWeight={'bold'} color={'red'} >Delete</MenuItem>
                 </MenuList>
                 </Portal>
               </Menu>

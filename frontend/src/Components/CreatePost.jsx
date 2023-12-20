@@ -1,4 +1,4 @@
-import { AddIcon } from '@chakra-ui/icons'
+// import { AddIcon } from '@chakra-ui/icons'
 import { Button, CloseButton, Flex, FormControl, Image, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text, Textarea, useColorModeValue, useDisclosure } from '@chakra-ui/react'
 import { useRef, useState } from 'react';
 import { BsFillImageFill } from 'react-icons/bs'
@@ -6,7 +6,7 @@ import usePreviewImg from '../hooks/usePreviewImg';
 import { useRecoilValue } from 'recoil';
 import userAtom from '../atoms/userAtom';
 import useShowToast from '../hooks/useShowToast';
-
+const postIcon = "/more (1).png";
 const MAX_CHAR = 500;
 
 export const CreatePost = () => {
@@ -64,13 +64,21 @@ export const CreatePost = () => {
   return (
     <>
     <Button
-     position={"fixed"} 
-     top={10} 
+    size={"20"}
+     position={"absolute"} 
+     top={0} 
      left={"50%"} 
-     leftIcon={<AddIcon/>}
+     
+     leftIcon={
+        <Image
+            boxSize="1.5rem"  
+            src={postIcon}
+            alt="Post Icon"
+          />
+     }
      bg={useColorModeValue("gray.300","gray.dark")} 
      onClick={onOpen}
-      >Post</Button>
+      ></Button>
        <Modal isOpen={isOpen} onClose={onClose}>
 				<ModalOverlay />
 
