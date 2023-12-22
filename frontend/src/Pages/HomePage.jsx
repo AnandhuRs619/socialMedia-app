@@ -20,7 +20,7 @@ export const HomePage = () => {
       if(data.error){
         showToast("Eroor",data.error,"error");
       }
-      console.log(data)
+      
     } catch (error) {
       showToast("Error",error.message,"error")
     }finally{
