@@ -9,7 +9,7 @@ import useShowToast from "../hooks/useShowToast";
 
 export const UserHeader = ({user}) => {
     const currentUser = useRecoilValue(userAtom); // this  user is logged in 
-    const [following ,setFollowing]= useState(user.followers.includes(currentUser._id));
+    const [following ,setFollowing]= useState(user.followers.includes(currentUser?._id));
     const [updating,setUpdating] = useState(false);
 
     const showToast = useShowToast();
@@ -105,12 +105,12 @@ export const UserHeader = ({user}) => {
         </Flex>
         <Text> {user.bio} </Text>
         
-        {currentUser._id === user._id && (
+        {currentUser?._id === user._id && (
             <Link as={RouterLink} to='/update' >
             <Button size={"sm"}  >Update Profile</Button>
             </Link>
         )}
-        {currentUser._id !== user._id && (
+        {currentUser?._id !== user._id && (
            
             <Button size={"sm"} onClick={handleFollowUnfollow} isLoading={updating} >{following ? "Unfollow":"Follow" }</Button>
            

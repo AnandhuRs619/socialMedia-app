@@ -1,4 +1,4 @@
-import {Box, Flex, Text} from "@chakra-ui/react";
+import {Box, Button, Flex, FormControl, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text, useDisclosure} from "@chakra-ui/react";
 import { useState } from "react";
 import { useRecoilValue } from "recoil";
 import userAtom from "../atoms/userAtom";
@@ -12,7 +12,12 @@ export const Actions = ({ post:post_ }) => {
 	const [liked,setLiked] = useState(post_.likes.includes(user?._id));
 	const [post,setPost] = useState(post_);
 	const [isLiking,setLiking] = useState(false);
+	const [isReplying,setIsReplying] = useState(false);
+	const [reply,setReply] =useState("")
 	const showToast = useShowToast();
+	const { isOpen, onOpen, onClose } = useDisclosure();
+
+
 
 	const handleLikeandUnlike = async()=>{
 
@@ -47,6 +52,33 @@ export const Actions = ({ post:post_ }) => {
 		}
 	};
 
+	const handleReply = async ()=>{
+
+		if(!user) return showToast("Error","You must be logged in to reply to a post ", "error")
+		if(isReplying) return;
+		setIsReplying(true);
+		try {
+			const res = await fetch("/api/posts/reply/" + post._id,{
+				method:"PUT",
+				headers:{
+					"Content-Type":"application/json",
+				},
+				body:JSON.stringify({text:reply})
+			})
+			const data = await res.json();
+			if(data.error) return showToast("Error". data.error,"error");
+			setPost({...post,replies:[...post.replies,data.reply]})
+			showToast("Success", "Reply Posted Successfully","success")
+			console.log(data);
+			onClose();
+			setReply("");
+		} catch (error) {
+			showToast("Error",error.message,"error")
+		}finally{
+			setIsReplying(false);
+		}
+	}
+
 	return (
 		<Flex flexDirection={"column"} >
 			<Flex gap={3} my={2} onClick={(e) => e.preventDefault()}>
@@ -76,7 +108,7 @@ export const Actions = ({ post:post_ }) => {
 					role='img'
 					viewBox='0 0 24 24'
 					width='20'
-					
+					onClick={onOpen}
 				>
 					<title>Comment</title>
 					<path
@@ -87,7 +119,7 @@ export const Actions = ({ post:post_ }) => {
 						strokeWidth='2'
 					></path>
 				</svg>
-				
+
 				<RepostSVG />
 				<ShareSVG />
 
@@ -102,6 +134,29 @@ export const Actions = ({ post:post_ }) => {
               {post.likes.length} likes
             </Text>
           </Flex>
+   <Modal  isOpen={isOpen} onClose={onClose}>
+				<ModalOverlay  />
+				<ModalContent >
+					<ModalHeader></ModalHeader>
+					<ModalCloseButton />
+					<ModalBody  pb={6}>
+						<FormControl>
+							<Input
+								placeholder='Reply goes here..'
+								value={reply}
+								onChange={(e) => setReply(e.target.value)}
+							/>
+						</FormControl>
+					</ModalBody>
+
+					<ModalFooter>
+						<Button colorScheme='blue' size={"sm"} mr={3} isLoading={isReplying} onClick={handleReply}>
+							Reply
+						</Button>
+					</ModalFooter>
+				</ModalContent>
+			</Modal>
+
 		</Flex>
 	);
 };
