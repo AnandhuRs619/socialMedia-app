@@ -6,14 +6,16 @@ import { Actions } from "./Action"
 import { useEffect, useState } from "react"
 import { formatDistanceToNow } from 'date-fns';
 import useShowToast from "../hooks/useShowToast"
-
+import{DeleteIcon} from "@chakra-ui/icons"
+import { useRecoilValue } from "recoil"
+import userAtom from "../atoms/userAtom"
 
 export const Post = ({post,postedBy}) => {
 
     const [user, setUser] = useState(null);
     const showToast = useShowToast();
     const navigate = useNavigate();
-
+    const currentUser = useRecoilValue(userAtom);
     useEffect(() => {
 		const getUser = async () => {
 			try {
@@ -32,6 +34,26 @@ export const Post = ({post,postedBy}) => {
 
 		getUser();
 	}, [postedBy, showToast]);
+
+  const handleDeletepost = async (e)=>{
+    try {
+      e.preventDefault();
+      if(!window.confirm("Are yuo want to delete this post ?")) return;
+      const res = await fetch(`/api/posts/${post._id}`,{
+        method: "DELETE",
+      })
+      const data = res.json()
+      if(data.error){
+        showToast("Error",data.error,"error");
+        return;
+      }
+      showToast("Success","Post Deleted Successfully","success");
+    } catch (error) {
+      showToast("Error",error.message,"error");
+
+    }
+  }
+
     if(!user)return null;
   return (
     <Link to={`/${user.username}/post/${post._id}`}>
@@ -99,6 +121,9 @@ export const Post = ({post,postedBy}) => {
             <Text fontSize={"xs"} width={36} textAlign={"right"} color={"gray.light"}>
 								{formatDistanceToNow(new Date(post.createdAt))} ago
 							</Text>
+
+              
+              {currentUser._id=== user._id && 
               <Box onClick={(e) => e.preventDefault()} className="icon-container">
               <Menu>
               <MenuButton  >
@@ -109,11 +134,31 @@ export const Post = ({post,postedBy}) => {
                   <MenuItem bg={"gray.dark"}fontWeight={'bold'} borderBottom={'1px solid gray'} >Pin to porfile</MenuItem>
                   <MenuItem bg={"gray.dark"}fontWeight={'bold'}borderBottom={'1px solid gray'}>Archive</MenuItem>
                   <MenuItem bg={"gray.dark"}fontWeight={'bold'}borderBottom={'1px solid gray'}>Hide like count </MenuItem>
-                  <MenuItem bg={"gray.dark"}fontWeight={'bold'} color={'red'} >Delete</MenuItem>
+                  <MenuItem bg={"gray.dark"}fontWeight={'bold'} icon={<DeleteIcon size={20} />} onClick={handleDeletepost} color={'red'} >Delete</MenuItem>
                 </MenuList>
                 </Portal>
               </Menu>
               </Box>
+              }
+              {currentUser._id !== user._id && 
+              <Box onClick={(e) => e.preventDefault()} className="icon-container">
+              <Menu>
+              <MenuButton  >
+                <BsThreeDots   cursor={"pointer"}>Actions</BsThreeDots>
+                </MenuButton>
+                <Portal>
+                <MenuList bg={"gray.dark"}>
+                  <MenuItem bg={"gray.dark"}fontWeight={'bold'} borderBottom={'1px solid gray'} >Unfollow</MenuItem>
+                  <MenuItem bg={"gray.dark"}fontWeight={'bold'}borderBottom={'1px solid gray'}>Mute</MenuItem>
+                  <MenuItem bg={"gray.dark"}fontWeight={'bold'}borderBottom={'1px solid gray'}>Hide </MenuItem>
+                  <MenuItem bg={"gray.dark"}fontWeight={'bold'}  color={'red'} >Report</MenuItem>
+                </MenuList>
+                </Portal>
+              </Menu>
+              </Box>
+              }
+
+              
             </Flex>
           </Flex>
           <Text fontSize={"sm"}>{post.text}</Text>
