@@ -1,4 +1,4 @@
-import { Box, Flex, Spinner } from "@chakra-ui/react"
+import { Box, Divider, Flex, Spinner } from "@chakra-ui/react"
 // import { Link } from "react-router-dom"
 import useShowToast from "../hooks/useShowToast"
 import { useEffect, useState } from "react";
@@ -41,8 +41,11 @@ export const HomePage = () => {
       )}
 
       {posts.map((post) => (
+      <>
         <Post key={post._id} post={post} postedBy={post.postedBy} />
-      ))}
+        <Divider ml={6} my={4}/>
+        </>
+        ))}
     </Box>
     <Box
       flex={30}

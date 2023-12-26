@@ -5,32 +5,17 @@ import { useParams } from "react-router-dom";
 import useShowToast from '../hooks/useShowToast';
 import { Flex, Spinner } from "@chakra-ui/react";
 import { Post } from "../Components/Post";
+import useGetUserProfile from "../hooks/useGetUserProfile";
 
 export const UserPage = () => {
-  const [user, setUser] = useState(null);
+  const {user,loading} = useGetUserProfile();
   const { username } = useParams();
   const showToast = useShowToast();
-  const [loading, setLoading] = useState(true);
   const [posts, setPosts] = useState([]);
   const [fetchingPosts, setFetchingPosts] = useState(true); // Fixed the typo
 
   useEffect(() => {
-    const getUser = async () => {
-      try {
-        const res = await fetch(`/api/users/profile/${username}`);
-        const data = await res.json();
-        if (data.error) {
-          showToast("Error", data.error, "error");
-          return;
-        }
-        setUser(data);
-        console.log(data);
-      } catch (error) {
-        showToast("Error", error.message, "error");
-      } finally {
-        setLoading(false);
-      }
-    };
+    
 
     const getPost = async () => {
       setFetchingPosts(true);
@@ -47,7 +32,7 @@ export const UserPage = () => {
       }
     };
 
-    getUser();
+   
     getPost();
   }, [username, showToast]);
 
