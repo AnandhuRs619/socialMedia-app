@@ -62,7 +62,7 @@ export const CreatePost = () => {
     }
 
   return (
-    <Flex alignItems="center" justifyContent={'center'} >
+    <Flex alignItems={{ base: "center", md: "inherit" }} justifyContent={'center'} >
     <Button
     size={"1"}
      position={"absolute"} 
