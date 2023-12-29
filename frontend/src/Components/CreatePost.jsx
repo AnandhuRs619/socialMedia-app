@@ -62,13 +62,11 @@ export const CreatePost = () => {
     }
 
   return (
-    <>
+    <Flex alignItems="center" justifyContent={'center'} >
     <Button
-    size={"20"}
+    size={"1"}
      position={"absolute"} 
-     top={0} 
-     left={"50%"} 
-     
+
      leftIcon={
         <Image
             boxSize="1.5rem"  
@@ -128,6 +126,6 @@ export const CreatePost = () => {
 					</ModalFooter>
 				</ModalContent>
 			</Modal>
-    </>
+            </Flex>
   )
 }
