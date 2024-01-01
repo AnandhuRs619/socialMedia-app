@@ -37,6 +37,11 @@ const postSchema = mongoose.Schema(
 				username: {
 					type: String,
 				},
+				createdAt: {
+					type: Date,
+					default: Date.now,
+				  },
+				
 				likes: {
 					// array of user ids
 					type: [mongoose.Schema.Types.ObjectId],

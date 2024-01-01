@@ -1,17 +1,18 @@
 import {Box, Button, Flex, FormControl, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text, useDisclosure} from "@chakra-ui/react";
 import { useState } from "react";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import userAtom from "../atoms/userAtom";
 import useShowToast from "../hooks/useShowToast";
+import { postsAtom } from "../atoms/postAtom";
 // import { CgListTree } from "react-icons/cg";
 
 
-export const Actions = ({ post:post_ }) => {
+export const Actions = ({ post}) => {
 
 	const user =useRecoilValue(userAtom);
-	const [liked,setLiked] = useState(post_.likes.includes(user?._id));
-	const [post,setPost] = useState(post_);
-	const [isLiking,setLiking] = useState(false);
+	const [liked,setLiked] = useState(post.likes.includes(user?._id));
+	const [posts,setPosts] = useRecoilState(postsAtom)
+	const [isLiking,setIsLiking] = useState(false);
 	const [isReplying,setIsReplying] = useState(false);
 	const [reply,setReply] =useState("")
 	const showToast = useShowToast();
@@ -19,13 +20,11 @@ export const Actions = ({ post:post_ }) => {
 
 
 
-	const handleLikeandUnlike = async()=>{
-
-		if(!user) return showToast("Error","You must be logged in to like a post ", "error")
-		if(isLiking) return;
-		setLiking(true);
+	const handleLikeAndUnlike = async () => {
+		if (!user) return showToast("Error", "You must be logged in to like a post", "error");
+		if (isLiking) return;
+		setIsLiking(true);
 		try {
-			
 			const res = await fetch("/api/posts/like/" + post._id, {
 				method: "PUT",
 				headers: {
@@ -33,22 +32,33 @@ export const Actions = ({ post:post_ }) => {
 				},
 			});
 			const data = await res.json();
-			if(data.error)  return	showToast("Error",data.error,"error");
+			if (data.error) return showToast("Error", data.error, "error");
 
-			console.log(data);
-			if(!liked){
-				setPost({...post,likes:[...post.likes,user._id]});
-			}else{
-				setPost({...post , likes: post.likes.filter(id=>id!==user._id)});
+			if (!liked) {
+				// add the id of the current user to post.likes array
+				const updatedPosts = posts.map((p) => {
+					if (p._id === post._id) {
+						return { ...p, likes: [...p.likes, user._id] };
+					}
+					return p;
+				});
+				setPosts(updatedPosts);
+			} else {
+				// remove the id of the current user from post.likes array
+				const updatedPosts = posts.map((p) => {
+					if (p._id === post._id) {
+						return { ...p, likes: p.likes.filter((id) => id !== user._id) };
+					}
+					return p;
+				});
+				setPosts(updatedPosts);
 			}
 
 			setLiked(!liked);
-
 		} catch (error) {
-			
-			showToast('Error',error.message,'error');
-		}finally{
-			setLiking(false)
+			showToast("Error", error.message, "error");
+		} finally {
+			setIsLiking(false);
 		}
 	};
 
@@ -67,7 +77,15 @@ export const Actions = ({ post:post_ }) => {
 			})
 			const data = await res.json();
 			if(data.error) return showToast("Error". data.error,"error");
-			setPost({...post,replies:[...post.replies,data.reply]})
+			
+			const updatedPosts = posts.map((p)=>{
+				if(p._id=== post._id){
+					return{...p,replies:[...p.replies,data]}
+				}
+				return p ;
+
+			})
+			setPosts(updatedPosts);
 			showToast("Success", "Reply Posted Successfully","success")
 			console.log(data);
 			onClose();
@@ -90,7 +108,7 @@ export const Actions = ({ post:post_ }) => {
 					role='img'
 					viewBox='0 0 24 22'
 					width='20'
-                    onClick={handleLikeandUnlike}
+                    onClick={handleLikeAndUnlike}
 					
 				>
 					<path

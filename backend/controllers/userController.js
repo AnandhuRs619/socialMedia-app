@@ -4,6 +4,7 @@ import generateTokenAndSetCookie from '../utils/helper/generateToken.js';
 import{v2 as cloudinary} from "cloudinary";
 
 import mongoose from "mongoose";
+import Post from '../models/postModel.js';
 
 const getUserProfile = async(req,res)=>{
 	//  fetch user profile either with username or userId
@@ -86,6 +87,7 @@ const signupUser = async (req, res) => {
 			username:user.username,
 			bio:user.bio,
 			profilePic:user.profilePic,
+			
 		})
 
 	}catch(error){
@@ -117,17 +119,19 @@ const signupUser = async (req, res) => {
 		if (!userToModify || !currentUser) return res.status(400).json({ error: "User not found" });
 
 		const isFollowing = currentUser.following.includes(id);
-
+			console.log(isFollowing);
 		if (isFollowing) {
 			// Unfollow user
 			await User.findByIdAndUpdate(id, { $pull: { followers: req.user._id } });
 			await User.findByIdAndUpdate(req.user._id, { $pull: { following: id } });
 			res.status(200).json({ message: "User unfollowed successfully" });
+			console.log("UnFollowed done +++++++++---")
 		} else {
 			// Follow user
 			await User.findByIdAndUpdate(id, { $push: { followers: req.user._id } });
 			await User.findByIdAndUpdate(req.user._id, { $push: { following: id } });
 			res.status(200).json({ message: "User followed successfully" });
+			console.log("Followed done +++++++++---++++")
 		}
 	} catch (err) {
 		res.status(500).json({ error: err.message });
@@ -166,9 +170,19 @@ const updateUser = async(req,res)=>{
 
 		 user = await user.save();
 
+		 await Post.updateMany(
+			{"replies.userId":userId},
+			{
+				$set:{
+					"replies.$[reply].username":user.username,
+					"replies.$[reply].userProfilePic":user.profilePic
+				}
+			},
+			{arrayFilters:[{"reply.userId":userId}]}
+		 )
 		 // password should be null in response
 		 
-		// user.password = null;
+		user.password = null;
 
 		 res.status(200).json( user)
 

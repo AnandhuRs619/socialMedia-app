@@ -3,9 +3,11 @@ import { Button, CloseButton, Flex, FormControl, Image, Input, Modal, ModalBody,
 import { useRef, useState } from 'react';
 import { BsFillImageFill } from 'react-icons/bs'
 import usePreviewImg from '../hooks/usePreviewImg';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import userAtom from '../atoms/userAtom';
 import useShowToast from '../hooks/useShowToast';
+import { postsAtom } from '../atoms/postAtom';
+import { useParams } from 'react-router-dom';
 const postIcon = "/more (1).png";
 const MAX_CHAR = 500;
 
@@ -18,6 +20,8 @@ export const CreatePost = () => {
     const [loading,setLoading]=useState(false)
     const user = useRecoilValue(userAtom);
     const showToast = useShowToast();
+    const [posts,setPosts] = useRecoilState(postsAtom);
+    const {username} = useParams();
 
     const handleTextChange = (e)  => {
         const inputText = e.target.value
@@ -49,6 +53,10 @@ export const CreatePost = () => {
                 return
             }
             showToast("Success","Post created successfully" , "success")
+            if(username === user.username){
+                
+                setPosts([data,...posts]);
+            }
             onClose();
             setPostText("");
             setImgUrl("");
@@ -66,17 +74,13 @@ export const CreatePost = () => {
     <Button
     size={"1"}
      position={"absolute"} 
-
-     leftIcon={
-        <Image
-            boxSize="1.5rem"  
-            src={postIcon}
-            alt="Post Icon"
-          />
-     }
      bg={useColorModeValue("gray.300","gray.dark")} 
      onClick={onOpen}
-      ></Button>
+      > <Image
+      boxSize="1.5rem"  
+      src={postIcon}
+      alt="Post Icon"
+    /> </Button>
        <Modal isOpen={isOpen} onClose={onClose}>
 				<ModalOverlay />
 

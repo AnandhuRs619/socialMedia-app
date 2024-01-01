@@ -146,12 +146,12 @@ const replyToPost = async(req,res)=>{
         if(!post){
             return res(404).json({error:" post not found"});
         }
-
-        const reply ={ post,userId ,text , userProfilePic, username};
+		const createdAt = new Date();
+        const reply ={ post,userId ,text , userProfilePic, username,createdAt};
 
         post.replies.push(reply);
         await post.save();
-        res.status(200).json({message:" your reply is added successfully ",reply});
+        res.status(200).json(reply);
 
 
 
