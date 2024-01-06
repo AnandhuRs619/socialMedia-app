@@ -4,8 +4,7 @@ import Message from "../models/messageModel.js";
 const sendMessage = async(req,res)=>{
 try {
     const {recipientId,message} = req.body;
-    const senderId =req.user_id;
-
+    const senderId =req.user._id
     let conversation = await Conversation.findOne({
         participants:{$all:[senderId , recipientId]},
     });
@@ -42,6 +41,48 @@ try {
 }
 }
 
+const getMessages = async(req,res)=>{
+    const { otherUserId } = req.params;
+    const userId = req.user._id;
+
+try {
+    const conversation = await Conversation.findOne({
+        participants:{$all:[userId,otherUserId]},
+    })
+if(!conversation){
+    res.status(500).json({error:"Conversation is not found"});
+}   
+const message = await Message.find({
+    conversationId:conversation._id,
+}).sort({createAt: -1});
+
+res.status(200).json(message);
+    
+} catch (error) {
+    res.status(500).json({error:error.message});
+}
+}
 
 
-export {sendMessage};
+const getConversations = async(req,res)=>{
+    const userId = req.user._id;
+    
+    try {
+        const conversations = await Conversation.find({participants:userId}).populate({
+            path:"participants",
+            select:"username profilePic",
+        });
+
+        res.status(200).json(conversations)
+
+    } catch (error) {
+        res.status(500).json({error:error.message});
+    }
+}
+
+
+
+export {sendMessage,
+ getMessages,
+ getConversations,
+};
