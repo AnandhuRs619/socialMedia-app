@@ -145,7 +145,7 @@ export const UserHeader = ({user}) => {
         </Flex>
         <Flex w={'full'}>
             <Flex flex={1} borderBottom={'1.5px solid white'} justifyContent={'center'} pb='3' cursor={'pointer'} >
-                <Text fontWeight={'bold'} > Threads</Text>
+                <Text fontWeight={'bold'} > Posts</Text>
             </Flex>
             <Flex flex={1} borderBottom={'1px solid gray'} justifyContent={'center'} color={'gray.light'} pb='3' cursor={'pointer'} >
                 <Text fontWeight={'bold'} > Replies</Text>

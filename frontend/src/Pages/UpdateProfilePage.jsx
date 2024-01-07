@@ -15,9 +15,11 @@ import { useRecoilState } from "recoil";
 import userAtom from "../atoms/userAtom";
 import usePreviewImg from "../hooks/usePreviewImg";
 import useShowToast from "../hooks/useShowToast";
+import { useNavigate } from "react-router-dom";
 
 export default function UpdateProfilePage() {
 	const [user, setUser] = useRecoilState(userAtom);
+	const navigate = useNavigate();
 	const [inputs, setInputs] = useState({
 		name: user.name,
 		username: user.username,
@@ -59,6 +61,11 @@ export default function UpdateProfilePage() {
 			setUpdating(false);
 		}
 	};
+
+	const handleCancel = () => {
+		// Navigate to the user profile page
+		navigate(`/${user.username}`);  };
+	
 	return (
 		<form onSubmit={handleSubmit}>
 			<Flex align={"center"} justify={"center"} my={6}>
@@ -146,6 +153,7 @@ export default function UpdateProfilePage() {
 							_hover={{
 								bg: "red.500",
 							}}
+							onClick={handleCancel}
 						>
 							Cancel
 						</Button>
