@@ -9,12 +9,14 @@ import { useRecoilValue } from "recoil"
 import userAtom from "./atoms/userAtom"
 import UpdateProfilePage from "./Pages/UpdateProfilePage"
 import { ChatPage } from "./Pages/ChatPage"
+import ErrorBoundary from "./Components/ErrorBoundary"
 // import { CreatePost } from "./Components/CreatePost"
 
 function App() {
  const user = useRecoilValue(userAtom);
 
   return (
+    <ErrorBoundary>
     <Box position={"relative"}
     w={"full"}>
     <Container maxW='620px' >
@@ -28,12 +30,13 @@ function App() {
       <Route path="/:username"  element ={ <UserPage />} />
       <Route path="/:username/post/:pid"  element ={ <PostPage />} />
       <Route path="/chat"  element ={ user ? <ChatPage /> : <Navigate to={"/auth"}/>} />
-      
+       {/* <Route path="*" element={<NotFoundPage />} /> */}
      </Routes>
     
     {/* //  {user && <CreatePost/>} */}
      </Container>
      </Box>
+     </ErrorBoundary>
   )
 }
 

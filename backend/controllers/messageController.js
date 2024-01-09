@@ -34,6 +34,7 @@ try {
             }
         })
     ])
+    console.log(newMessage)
  res.status(201).json(newMessage);
 
 } catch (error) {
@@ -43,24 +44,24 @@ try {
 
 const getMessages = async(req,res)=>{
     const { otherUserId } = req.params;
-    const userId = req.user._id;
+	const userId = req.user._id;
+	try {
+		const conversation = await Conversation.findOne({
+			participants: { $all: [userId, otherUserId] },
+		});
 
-try {
-    const conversation = await Conversation.findOne({
-        participants:{$all:[userId,otherUserId]},
-    })
-if(!conversation){
-    res.status(500).json({error:"Conversation is not found"});
-}   
-const message = await Message.find({
-    conversationId:conversation._id,
-}).sort({createAt: -1});
+		if (!conversation) {
+			return res.status(404).json({ error: "Conversation not found" });
+		}
 
-res.status(200).json(message);
-    
-} catch (error) {
-    res.status(500).json({error:error.message});
-}
+		const messages = await Message.find({
+			conversationId: conversation._id,
+		}).sort({ createdAt: 1 });
+        
+		res.status(200).json(messages);
+	} catch (error) {
+		res.status(500).json({ error: error.message });
+	}
 }
 
 

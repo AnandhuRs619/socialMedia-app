@@ -1,15 +1,18 @@
-import { Avatar, AvatarBadge, Flex, Image, Stack, Text, WrapItem, useColorModeValue } from "@chakra-ui/react";
+import { Avatar, AvatarBadge, Flex, Image, Stack, Text, WrapItem, useColorMode, useColorModeValue } from "@chakra-ui/react";
 import { BsCheck2All, BsFillImageFill } from "react-icons/bs";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import userAtom from "../atoms/userAtom";
-
+import {selectedConversationAtom} from "../atoms/messagesAtom"
 
 export default function Conversation({conversation}) {
 
     const user = conversation.participants[0];
+
     const currentUser = useRecoilValue(userAtom);
     const lastMessage = conversation.lastMessage;
-   
+    const [selectedConversation , setSelectedConversation] =useRecoilState(selectedConversationAtom)
+    const colorMode = useColorMode();
+   console.log("selected is here ",selectedConversation)
   return (
     <Flex gap={4} alignItems={"center"} p={"1"}
     _hover={{
@@ -17,14 +20,24 @@ export default function Conversation({conversation}) {
         bg: useColorModeValue("gray.600","gray.dark"),
         color:"white",
     }}
-    borderRadius={"md"}>
+    borderRadius={"md"}
+    onClick={()=> setSelectedConversation({
+        _id: conversation._id,
+        userId: user._id,
+        userProfilePic:user.profilePic,
+        username:user.username,
+    })} 
+    bg={
+        selectedConversation?._id === conversation._id ? (colorMode === "light" ? "gray.400" : "gray.dark") : ""
+    }
+    >
         <WrapItem>
             <Avatar size={{
                 Base:"xs",
                 sm:"sm",
                 md:"md"
             }}
-            src={user.profilePic}
+            src={user?.profilePic}
             >
 
             <AvatarBadge boxSize="1em" bg={"green.500"} />
@@ -33,7 +46,7 @@ export default function Conversation({conversation}) {
         </WrapItem>
         <Stack direction={"column"} fontSize={"sm"}>
             <Text fontWeight={"700"} display={"flex"} alignItems={"center"} >
-                {user.username} 
+                {user?.username} 
                 <Image src="/verified.png" w={4} h={4} ml={1} />
             </Text>
             <Text fontSize={"xs"} display={"flex"} alignItems={"center" } gap={1} >
