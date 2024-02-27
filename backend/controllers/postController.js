@@ -4,42 +4,50 @@ import {v2 as cloudinary} from "cloudinary";
 
 
 const createPost = async (req, res) => {
-	try {
-		const { postedBy, text } = req.body;
-		let { img } = req.body;
+    try {
+        const { postedBy, text } = req.body;
+        let { file } = req.body; // Assuming the file is sent as 'file' in the request body
+        if (!postedBy || !text) {
+            return res.status(400).json({ error: "Postedby and text fields are required" });
+        }
 
-		if (!postedBy || !text) {
-			return res.status(400).json({ error: "Postedby and text fields are required" });
-		}
+        const user = await User.findById(postedBy);
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
 
-		const user = await User.findById(postedBy);
-		if (!user) {
-			return res.status(404).json({ error: "User not found" });
-		}
+        if (user._id.toString() !== req.user._id.toString()) {
+            return res.status(401).json({ error: "Unauthorized to create post" });
+        }
 
-		if (user._id.toString() !== req.user._id.toString()) {
-			return res.status(401).json({ error: "Unauthorized to create post" });
-		}
+        const maxLength = 500;
+        if (text.length > maxLength) {
+            return res.status(400).json({ error: `Text must be less than ${maxLength} characters` });
+        }
 
-		const maxLength = 500;
-		if (text.length > maxLength) {
-			return res.status(400).json({ error: `Text must be less than ${maxLength} characters` });
-		}
+        if (file) {
+            // Check if the file is an image or video based on its mimetype
+            const isImage = file.startsWith('data:image');
+            const isVideo = file.startsWith('data:video');
 
-		if (img) {
-			const uploadedResponse = await cloudinary.uploader.upload(img);
-			img = uploadedResponse.secure_url;
-		}
+            if (isImage || isVideo) {
+                const uploadedResponse = await cloudinary.uploader.upload(file, { resource_type: isImage ? "image" : "video" });
+                file = uploadedResponse.secure_url;
+            } else {
+                return res.status(400).json({ error: "Invalid file type. Only images and videos are supported" });
+            }
+        }
 
-		const newPost = new Post({ postedBy, text, img });
-		await newPost.save();
+        const newPost = new Post({ postedBy, text, img: file });
+        await newPost.save();
 
-		res.status(201).json(newPost);
-	} catch (err) {
-		res.status(500).json({ error: err.message });
-		console.log(err);
-	}
+        res.status(201).json(newPost);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+        console.log(err);
+    }
 };
+
 
 
 const getPost = async(req,res)=>{

@@ -171,8 +171,20 @@ export const Post = ({post,postedBy}) => {
               overflow={"hidden"}
               border={"1px solid"}
               borderColor={'"gray.light'}
+              width="530" height="230"
             >
-              <Image src={post.img} w={"full"} />
+      {post.img && (
+    <>
+        {/\.(webm|mp4)$/.test(post.img) ? (
+            <video width="530" height="230" controls >
+                <source src={post.img} type="video/mp4" />
+                Your browser does not support the video tag.
+            </video>
+        ) : (
+            <Image src={post.img} w={"full"} />
+        )}
+    </>
+)}
             </Box>
           )}
           <Flex gap={3} my={1}>

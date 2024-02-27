@@ -56,12 +56,12 @@ console.log("post is here ",posts)
 
       {!fetchingPosts && posts.length === 0 && <h1>User has no posts.</h1>}
       {fetchingPosts && (
-        <Flex justifyContent="center" my={12}>
+        <Flex justifyContent="center" my={10}>
           <Spinner size="xl" />
         </Flex>
       )}
       {posts.map((post) => (
-				<Post key={post._id} post={post} postedBy={post.postedBy} />
+				<Post  key={post._id} post={post} postedBy={post.postedBy} />
 			))}
     </>
   );

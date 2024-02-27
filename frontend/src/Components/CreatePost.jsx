@@ -14,7 +14,7 @@ const MAX_CHAR = 500;
 export const CreatePost = () => {
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [postText , setPostText] = useState('');
-    const { handleImageChange, imgUrl, setImgUrl } = usePreviewImg();
+    const { imgUrl, setImgUrl } = usePreviewImg();
     const imageRef = useRef(null);
     const [remainingChar,setRemainingChar] =useState(MAX_CHAR)
     const [loading,setLoading]=useState(false)
@@ -34,6 +34,16 @@ export const CreatePost = () => {
             setRemainingChar(MAX_CHAR-inputText.length);
         }
     }
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setImgUrl(reader.result);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
 
     const handleCreatePost = async()=>{
         setLoading(true);
@@ -43,7 +53,7 @@ export const CreatePost = () => {
 				headers: {
 					"Content-Type": "application/json",
 				},
-				body: JSON.stringify({ postedBy: user._id, text: postText, img: imgUrl }),
+				body: JSON.stringify({ postedBy: user._id, text: postText, file: imgUrl }),
 			});
 
             const data = await res.json();
@@ -98,7 +108,7 @@ export const CreatePost = () => {
 								{remainingChar}/{MAX_CHAR}
 							</Text>
 
-							<Input type='file' hidden ref={imageRef} onChange={handleImageChange} />
+                            <Input type='file' hidden ref={imageRef} onChange={handleFileChange} accept="image/*, video/*" />
 
 							<BsFillImageFill
 								style={{ marginLeft: "5px", cursor: "pointer" }}
@@ -108,19 +118,26 @@ export const CreatePost = () => {
 						</FormControl>
 
 						{imgUrl && (
-							<Flex mt={5} w={"full"} position={"relative"}>
-								<Image src={imgUrl} alt='Selected img' />
-								<CloseButton
-									onClick={() => {
-										setImgUrl("");
-									}}
-									bg={"gray.800"}
-									position={"absolute"}
-									top={2}
-									right={2}
-								/>
-							</Flex>
-						)}
+                            <Flex mt={5} w={"full"} position={"relative"}>
+                                {imgUrl.startsWith('data:image') ? (
+                                    <Image src={imgUrl} alt='Selected img' />
+                                ) : (
+                                    <video width="320" height="240" controls>
+                                        <source src={imgUrl} type="video/mp4" />
+                                        Your browser does not support the video tag.
+                                    </video>
+                                )}
+                                <CloseButton
+                                    onClick={() => {
+                                        setImgUrl("");
+                                    }}
+                                    bg={"gray.800"}
+                                    position={"absolute"}
+                                    top={2}
+                                    right={2}
+                                />
+                            </Flex>
+                        )}
 					</ModalBody>
 
 					<ModalFooter>

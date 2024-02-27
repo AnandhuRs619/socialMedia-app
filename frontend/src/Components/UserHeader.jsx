@@ -69,9 +69,9 @@ export const UserHeader = ({user}) => {
                 </Text>
                 <Flex gap={2} alignItems={'center'} >
                    <Text fontSize={'sm'} >{user.username} </Text> 
-                   <Text fontSize={"x-small"} bg={'gray.dark'} color={'gray.light'} p={1} borderRadius={'full'} >
+                   {/* <Text fontSize={"x-small"} bg={'gray.dark'} color={'gray.light'} p={1} borderRadius={'full'} >
                     threads.net
-                   </Text>
+                   </Text> */}
                 </Flex>
             </Box>
             <Box>

@@ -73,8 +73,9 @@ export const PostPage = () => {
 	return (
 		<>
 			<Flex>
+				
 				<Flex w={"full"} alignItems={"center"} gap={3}>
-					<Avatar src={user.profilePic} size={"md"} name='Mark Zuckerberg' />
+					<Avatar src={user.profilePic} size={"md"} name={user.username} />
 					<Flex>
 						<Text fontSize={"sm"} fontWeight={"bold"}>
 							{user.username}
@@ -126,11 +127,19 @@ export const PostPage = () => {
 
 			<Text my={3}>{currentPost.text}</Text>
 
-			{currentPost.img && (
-				<Box borderRadius={6} overflow={"hidden"} border={"1px solid"} borderColor={"gray.light"}>
-					<Image src={currentPost.img} w={"full"} />
-				</Box>
-			)}
+		{currentPost.img && (
+    <Box borderRadius={6} overflow={"hidden"} border={"1px solid"} borderColor={"gray.light"}>
+        {/\.(webm|mp4)$/.test(currentPost.img) ? (
+            <video width="auto" height="auto" controls autoPlay >
+                <source src={currentPost.img} type="video/mp4" />
+                Your browser does not support the video tag.
+            </video>
+        ) : (
+            <Image src={currentPost.img} w={"full"} />
+        )}
+    </Box>
+)}
+
 
 			<Flex gap={3} my={3}>
 				<Actions post={currentPost} />
