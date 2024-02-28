@@ -4,7 +4,7 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import userAtom from "../atoms/userAtom";
 import {selectedConversationAtom} from "../atoms/messagesAtom"
 
-export default function Conversation({conversation}) {
+export default function Conversation({conversation , isOnline}) {
 
     const user = conversation.participants[0];
 
@@ -41,7 +41,7 @@ export default function Conversation({conversation}) {
             src={user?.profilePic}
             >
 
-            <AvatarBadge boxSize="1em" bg={"green.500"} />
+            {isOnline ? <AvatarBadge boxSize="1em" bg={"green.500"} /> : ""}
             </Avatar>
             
         </WrapItem>
