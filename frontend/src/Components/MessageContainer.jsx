@@ -43,36 +43,64 @@ useEffect(()=>{
   });
 
   return () => socket.off("newMessage");
-},[socket]);
+},[socket , selectedConversation , setConversations]);
+
+useEffect(()=>{
+const lastMessageIsFromOtherUser = messages.length && messages[messages.length - 1 ].sender !== currentUser._id
+if(lastMessageIsFromOtherUser){
+  socket.emit("markMessagesAsSeen",{
+    conversationId : selectedConversation._id,
+    userId :  selectedConversation.userId 
+  })
+}
+
+socket.on("messagesSeen",({conversationId})=>{
+if(selectedConversation._id === conversationId){
+setMessages(prev =>{
+  const updatedMessages = prev.map(message =>{
+    if(!message.seen){
+      return{
+        ...message,
+        seen : true,
+      };
+    }
+    return message ; 
+  } )
+  return updatedMessages;
+})
+}
+})
+
+},[socket,selectedConversation , messages , currentUser._id])
 
 useEffect(()=>{
 messageEndRef.current?.scrollIntoView({behavior :"smooth"});
 },[messages])
 
-  useEffect(()=>{
-    const getMessages = async() =>{
+useEffect(() => {
+  const getMessages = async () => {
       setLoadingMessages(true);
       setMessages([]);
       try {
-        if(selectedConversation.mock) return ;
-        const res = await fetch(`/api/messages/${selectedConversation.userId}`)
-        const data = await res.json()
-        console.log(selectedConversation)
-        if(data.error){
-          showToast("Error",data.error,"error");
-          return;
-
-        }
-        setMessages(data);
-        console.log("full chat",data)
+          if (selectedConversation.mock) return;
+          const res = await fetch(`/api/messages/${selectedConversation.userId}`);
+          const data = await res.json();
+          console.log(selectedConversation);
+          if (data.error) {
+              showToast("Error", data.error, "error");
+              return;
+          }
+          setMessages(data);
+          console.log("full chat", data);
       } catch (error) {
-        showToast("Error" , error.message,"error")
-      }finally{
-        setLoadingMessages(false)
+          showToast("Error", error.message, "error");
+      } finally {
+          setLoadingMessages(false);
       }
-    }
-    getMessages();
-  },[showToast,selectedConversation.userId]);
+  };
+  getMessages();
+}, [ showToast,selectedConversation.userId,selectedConversation.mock]);
+
   return (
     <Flex flex={"70%"} bg={useColorModeValue("gray.200","gray.dark")} 
     borderRadius={"md"} p={2} flexDirection={"column"} >
