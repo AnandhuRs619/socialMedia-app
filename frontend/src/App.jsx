@@ -1,5 +1,5 @@
 import { Box, Container } from "@chakra-ui/react"
-import { Navigate, Route, Routes } from "react-router-dom"
+import { Navigate, Route, Routes, useLocation } from "react-router-dom"
 import { UserPage } from "./Pages/UserPage"
 import { PostPage } from "./Pages/PostPage"
 import { Header } from "./Components/Header"
@@ -14,12 +14,13 @@ import ErrorBoundary from "./Components/ErrorBoundary"
 
 function App() {
  const user = useRecoilValue(userAtom);
+   const { pathname } = useLocation();
 
   return (
     <ErrorBoundary>
     <Box position={"relative"}
     w={"full"}>
-    <Container maxW='620px' >
+    <Container maxW= {pathname === "/" ? "900px" : "620px"} >
       <Header/>
        
      <Routes>

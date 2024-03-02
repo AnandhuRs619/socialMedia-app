@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { Post } from "../Components/Post";
 import { useRecoilState } from "recoil";
 import { postsAtom } from "../atoms/postAtom";
+import { SuggestedUsers } from "../Components/SuggestedUsers";
 
 
 
@@ -57,7 +58,7 @@ export const HomePage = () => {
         md: "block",
       }}
     >
-      
+    <SuggestedUsers/>
     </Box>
   </Flex>
 )
