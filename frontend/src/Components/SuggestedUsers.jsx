@@ -4,10 +4,12 @@ import { SuggestedUser } from './SuggestedUser';
 import useShowToast from '../hooks/useShowToast';
 
 
+
 export const SuggestedUsers = () => {
     const [loading , setLoading ] = useState(true);
     const [suggestedUsers , setSuggestedUsers]= useState([]);
     const showToast = useShowToast();
+    
 
     useEffect(()=>{
         const getSuggestedUsers = async()=>{

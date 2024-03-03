@@ -116,7 +116,7 @@ export const ChatPage = () => {
         setSearchingUser(false);
       }
   }
-
+console.log(conversations)
   return (
     <Box
       position="absolute"
@@ -176,14 +176,19 @@ export const ChatPage = () => {
             ))
           )}
 
-       {!loadingConversations &&
-						conversations.map((conversation) => (
-							<Conversation
-								key={conversation._id}
-								isOnline = {onlineUsers.includes(conversation.participants[0]._id)}
-								conversation={conversation}
-							/>
-						))}   </Flex>
+{!loadingConversations && Array.isArray(conversations) ? (
+    conversations.map((conversation) => (
+        <Conversation
+            key={conversation._id}
+            isOnline={onlineUsers.includes(conversation.participants[0]._id)}
+            conversation={conversation}
+        />
+    ))
+) : (
+  <div>Conversations data is not available <span style={{ color: 'red' }}>relogin required.</span></div>
+
+
+)}  </Flex>
         {!selectedConversation._id && (
 					<Flex
 						flex={70}

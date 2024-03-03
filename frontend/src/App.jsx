@@ -20,7 +20,7 @@ function App() {
     <ErrorBoundary>
     <Box position={"relative"}
     w={"full"}>
-    <Container maxW= {pathname === "/" ? "900px" : "620px"} >
+    <Container maxW= {pathname === "/" ? {base : "620px ", md :"900px" } : "620px"} >
       <Header/>
        
      <Routes>

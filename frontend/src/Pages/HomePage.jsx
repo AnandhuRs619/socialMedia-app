@@ -6,7 +6,7 @@ import { Post } from "../Components/Post";
 import { useRecoilState } from "recoil";
 import { postsAtom } from "../atoms/postAtom";
 import { SuggestedUsers } from "../Components/SuggestedUsers";
-
+import React from "react";
 
 
 export const HomePage = () => {
@@ -44,12 +44,13 @@ export const HomePage = () => {
         </Flex>
       )}
 
-      {posts.map((post) => (
-      <>
-        <Post key={post._id} post={post} postedBy={post.postedBy} />
-        <Divider ml={6} my={4}/>
-        </>
-        ))}
+{posts.map((post, index) => (
+  <React.Fragment key={post._id}>
+    <Post key={post._id} post={post} postedBy={post.postedBy} />
+    <Divider key={`divider-${index}`} ml={6} my={4} />
+  </React.Fragment>
+))}
+
     </Box>
     <Box
       flex={30}
