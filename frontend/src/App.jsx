@@ -10,6 +10,8 @@ import userAtom from "./atoms/userAtom"
 import UpdateProfilePage from "./Pages/UpdateProfilePage"
 import { ChatPage } from "./Pages/ChatPage"
 import ErrorBoundary from "./Components/ErrorBoundary"
+import { SettingsPage } from "./Pages/SettingsPage"
+import { SearchPage } from "./Pages/SearchPage"
 // import { CreatePost } from "./Components/CreatePost"
 
 function App() {
@@ -31,6 +33,8 @@ function App() {
       <Route path="/:username"  element ={ <UserPage />} />
       <Route path="/:username/post/:pid"  element ={ <PostPage />} />
       <Route path="/chat"  element ={ user ? <ChatPage /> : <Navigate to={"/auth"}/>} />
+      <Route path="/settings"  element ={ user ? <SettingsPage /> : <Navigate to={"/auth"}/>} />
+      <Route path="/search"  element ={ user ? <SearchPage /> : <Navigate to={"/auth"}/>} />
        {/* <Route path="*" element={<NotFoundPage />} /> */}
      </Routes>
     

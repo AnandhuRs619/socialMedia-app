@@ -78,6 +78,12 @@ const signupUser = async (req, res) => {
 		const user = await User.findOne({username});
 		const isPasswordCorrect = await bcrypt.compare(password,user?.password || "");
 		if(!user || !isPasswordCorrect ) return res.status(400).json({error:"Invalid Username or Password"});
+
+		if(user.isFrozen){
+			user.isFrozen = false;
+			await user.save()
+		}
+
 		generateTokenAndSetCookie(user._id,res);
 
 		res.status(200).json({
@@ -222,4 +228,19 @@ const getSuggestedUsers =async(req,res)=>{
 	}
 }
 
-export { signupUser,loginUser,logoutUser,followUnFollowUser,updateUser,getUserProfile,getSuggestedUsers };
+const freezeAccount = async (req,res) =>{
+	try {
+		console.log("hAi")
+		const user = await User.findById(req.user._id);
+		if(!user){
+		 return	res.status(404).json({error:"User not Found "});
+		}
+		user.isFrozen = true;
+		await user.save();
+		res.status(200).json({succes:true});
+	} catch (error) {
+		res.status(500).json({error:error.message});
+	}
+}
+
+export { signupUser,loginUser,logoutUser,followUnFollowUser,updateUser,getUserProfile,getSuggestedUsers,freezeAccount };

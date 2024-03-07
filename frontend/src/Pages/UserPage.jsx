@@ -20,6 +20,7 @@ export const UserPage = () => {
     
 
     const getPost = async () => {
+      if(!user) return;
       setFetchingPosts(true);
       try {
         const res = await fetch(`/api/posts/user/${username}`);
@@ -36,8 +37,8 @@ export const UserPage = () => {
 
    
     getPost();
-  }, [username, showToast,setPosts]);
-console.log("post is here ",posts)
+  }, [username, showToast,setPosts,user]);
+
   if (!user && loading) {
     return (
       <Flex justifyContent="center">

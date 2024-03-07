@@ -49,7 +49,7 @@ export const Header = () => {
           <Link as={RouterLink} to={`/${user.username}`} fontSize="lg">
             <RxAvatar size={24} />
           </Link>
-		 <Link as={RouterLink} to={`/Search`} fontSize="lg">
+		 <Link as={RouterLink} to={`/search`} fontSize="lg">
             <BiSearch size={24} />
           </Link>
           <Link as={RouterLink} to={`/chat`} fontSize="lg">

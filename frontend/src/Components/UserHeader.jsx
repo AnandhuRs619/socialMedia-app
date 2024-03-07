@@ -100,6 +100,9 @@ export const UserHeader = ({user}) => {
 									<MenuItem bg={"gray.dark"} onClick={copyURL}>
 										Copy link
 									</MenuItem>
+                                    <MenuItem bg={"gray.dark"}  onClick={copyURL}>
+										Block
+									</MenuItem>
 								</MenuList>
 							</Portal>
 						</Menu>
