@@ -21,6 +21,7 @@ import { useSetRecoilState } from "recoil";
 import authScreenAtom from "../atoms/authAtom";
 import useShowToast from "../hooks/useShowToast";
 import userAtom from "../atoms/userAtom";
+import { FaFacebook, FaGoogle } from "react-icons/fa";
 
 export const SignupCard = () => {
     const [showPassword, setShowPassword] = useState(false);
@@ -54,6 +55,14 @@ export const SignupCard = () => {
             }
             localStorage.setItem("user-threads",JSON.stringify(data))
             setUser(data)
+        } catch (error) {
+            showToast("Error",error,"error")
+        }
+    }
+	const handleGoogleSignup = async ()=>{
+        try {
+            window.open(`/api/auth/google/calback`,
+            "_self")
         } catch (error) {
             showToast("Error",error,"error")
         }
@@ -131,6 +140,27 @@ export const SignupCard = () => {
 								Sign up
 							</Button>
 						</Stack>
+						<Stack justify={'center'} spacing={10} direction="row" alignItems="center">
+    <Button
+        size='lg'
+        bg={useColorModeValue("gray.600", "gray.700")}
+        _hover={{
+            bg: useColorModeValue("gray.700", "gray.800"),
+        }}
+        onClick={handleGoogleSignup}
+        leftIcon={<FaGoogle />}
+    />
+    <Button
+        size='lg'
+        bg={useColorModeValue("gray.600", "gray.700")}
+        _hover={{
+            bg: useColorModeValue("gray.700", "gray.800"),
+        }}
+        // onClick={handleFacebookLogin}
+        leftIcon={<FaFacebook />}
+        iconSpacing={1}
+    />
+</Stack>
 						<Stack pt={6}>
 							<Text align={"center"}>
 								Already a user?{" "}

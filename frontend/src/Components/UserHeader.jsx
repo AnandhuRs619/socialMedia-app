@@ -96,11 +96,11 @@ export const UserHeader = ({user}) => {
 								<CgMoreO size={24} cursor={"pointer"} />
 							</MenuButton>
 							<Portal>
-								<MenuList bg={"gray.dark"}>
-									<MenuItem bg={"gray.dark"} onClick={copyURL}>
+								<MenuList  bg={"gray.dark"}>
+									<MenuItem  bg={"gray.dark"}_hover={{ bg: "gray.light" }} borderBottom={'1px solid gray'} onClick={copyURL}>
 										Copy link
 									</MenuItem>
-                                    <MenuItem bg={"gray.dark"}  onClick={copyURL}>
+                                    <MenuItem bg={"gray.dark"} _hover={{ bg: "gray.light" }} borderBottom={'1px solid gray'} >
 										Block
 									</MenuItem>
 								</MenuList>

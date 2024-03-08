@@ -102,6 +102,15 @@ const signupUser = async (req, res) => {
 	}
  }
 
+ const forgotPassword = async(req,res)=>{
+	try {
+		
+	} catch (error) {
+		res.status(500).json({error:error.message});
+		console.log("Error in otp sending:",error.message);
+	}
+ }
+
  const logoutUser = async (req,res)=>{
 	try {
 		res.cookie("jwt","",{maxAge:1});
